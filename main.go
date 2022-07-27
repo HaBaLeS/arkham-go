@@ -1,6 +1,7 @@
 package main
 
 import (
+	"arkham-go/engine"
 	"arkham-go/runtime"
 	"fmt"
 )
@@ -42,6 +43,9 @@ func main() {
 	if crd == nil {
 		panic("Card not found")
 	}
-	fmt.Printf("Found Card: %s", crd.CardCode())
+	fmt.Printf("Found Card: %s\n", crd.CardCode())
 
+	println("Running the Game")
+	game := engine.NewGame()
+	game.Run()
 }
