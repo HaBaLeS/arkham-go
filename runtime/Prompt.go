@@ -1,11 +1,11 @@
-package engine
+package runtime
 
 import (
 	"github.com/peterh/liner"
 	"strings"
 )
 
-func (engine *Engine) prompt(cmd []GameCommand) {
+func (ps *PlaySession) prompt(cmd []GameCommand) {
 	prompt := liner.NewLiner()
 	defer prompt.Close()
 	prompt.SetWordCompleter(NewCOmmandCompleter(cmd))
@@ -18,7 +18,7 @@ func (engine *Engine) prompt(cmd []GameCommand) {
 		results := strings.Split(line, " ")
 		for _, c := range cmd {
 			if c.command() == results[0] {
-				c.call(engine, results[1:])
+				c.call(ps, results[1:])
 				return
 			}
 		}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"arkham-go/engine"
 	"arkham-go/runtime"
 	"fmt"
 )
@@ -46,6 +45,6 @@ func main() {
 	fmt.Printf("Found Card: %s\n", crd.CardCode())
 
 	println("Running the Game")
-	game := engine.NewGame()
+	game := runtime.NewGame()
 	game.Run()
 }
