@@ -2,7 +2,10 @@ module arkham-go
 
 go 1.18
 
-require github.com/peterh/liner v1.2.2
+require (
+	github.com/peterh/liner v1.2.2
+	github.com/traefik/yaegi v0.13.0
+)
 
 require (
 	github.com/mattn/go-runewidth v0.0.3 // indirect

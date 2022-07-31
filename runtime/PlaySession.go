@@ -1,48 +1,60 @@
 package runtime
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type GameState int
 
 const (
-	StateStart GameState = iota
+	StateVoid GameState = iota
+	StateStart
 	StateMythos
 	StateEnd
 )
 
 type GameCommand interface {
-	command() string
+	Command() string
 
-	help() string
+	Help() string
 
-	call(*PlaySession, []string)
+	Call(*PlaySession, []string)
 }
 
-var globalCommands = map[GameState][]GameCommand{
-	StateStart: {NewCommand("start",
-		"start <scenario> # starts the scenario of the given name",
-		startScenario),
-		NewCommand("exit",
-			"exit the game",
-			exitScenario),
-	},
+type GameEntity interface {
+	HandleEvent(state *PlaySession, event GameEvent)
+
+	FetchCommands(state *PlaySession) []GameCommand
 }
+
+type GameEvent interface {
+	Name() string
+	Payload() map[string]interface{}
+}
+
+type SimpleEvent struct {
+	name    string
+	payload map[string]interface{}
+}
+
+var globalCommands = map[GameState][]GameCommand{}
 
 type PlaySession struct {
-	currentState GameState
-	stateStack   []GameState
-	round        int
+	CurrentState   GameState
+	Round          int
+	GlobalEntities []GameEntity
+	Scenario       *Scenario
 }
 
 func NewGame() *PlaySession {
 	return &PlaySession{
-		currentState: StateStart,
-		stateStack:   make([]GameState, 0, 10),
-		round:        0,
+		CurrentState:   StateVoid,
+		Round:          0,
+		GlobalEntities: []GameEntity{&GlobalGameController{}},
 	}
 }
 func (ps *PlaySession) Run() {
-	for ps.currentState != StateEnd {
+	for ps.CurrentState != StateEnd {
 		stateCommands := ps.fetchUserStateCommands()
 		ps.prompt(stateCommands)
 	}
@@ -54,11 +66,40 @@ Get list of commands an interactive Player can do.
 func (ps *PlaySession) fetchUserStateCommands() []GameCommand {
 	result := make([]GameCommand, 0)
 	// fetch global state commands
-	result = append(result, globalCommands[ps.currentState]...)
+	result = append(result, globalCommands[ps.CurrentState]...)
 	// fetch commands from cards
+	for _, entity := range ps.GlobalEntities {
+		result = append(result, entity.FetchCommands(ps)...)
+	}
 	// fetch other commands ????
 	result = append(result, NewHelpCommand(result))
 	return result
+}
+
+func (ps *PlaySession) ChangeState(state GameState) {
+	if state != ps.CurrentState {
+		oldState := ps.CurrentState
+		ps.CurrentState = state
+		ps.EmitEvent(NewGameEvent("changeState",
+			map[string]interface{}{
+				"old": oldState,
+				"new": state,
+			}))
+	}
+}
+
+func (ps *PlaySession) EmitEvent(event GameEvent) {
+	for _, entity := range ps.GlobalEntities {
+		entity.HandleEvent(ps, event)
+	}
+
+}
+
+func NewGameEvent(name string, payload map[string]interface{}) GameEvent {
+	return &SimpleEvent{
+		name,
+		payload,
+	}
 }
 
 func NewHelpCommand(commands []GameCommand) GameCommand {
@@ -68,7 +109,7 @@ func NewHelpCommand(commands []GameCommand) GameCommand {
 		func(ps *PlaySession, args []string) {
 			println("help: you are looking at it now")
 			for _, cmd := range commands {
-				fmt.Printf("%s: %s\n", cmd.command(), cmd.help())
+				fmt.Printf("%s: %s\n", cmd.Command(), cmd.Help())
 			}
 		},
 	}
@@ -88,24 +129,22 @@ func NewCommand(cmd string, help string, fnc func(*PlaySession, []string)) GameC
 	}
 }
 
-func (cmd *SimpleCommand) command() string {
+func (cmd *SimpleCommand) Command() string {
 	return cmd.cmd
 }
 
-func (cmd *SimpleCommand) help() string {
+func (cmd *SimpleCommand) Help() string {
 	return cmd.hlp
 }
 
-func (cmd *SimpleCommand) call(ps *PlaySession, args []string) {
+func (cmd *SimpleCommand) Call(ps *PlaySession, args []string) {
 	cmd.fnc(ps, args)
 }
 
-func (ps *PlaySession) AddPlayer(name string, deck *Deck) {}
+func (se *SimpleEvent) Name() string {
+	return se.name
+}
 
-func (ps *PlaySession) Init(scenario *Scenario) {
-	//Create a chaos Bag
-	//Create AgendaDeck
-	//Create ActDeck
-	//GetLocation Cards
-	//Create EncounterDeck
+func (se *SimpleEvent) Payload() map[string]interface{} {
+	return se.payload
 }

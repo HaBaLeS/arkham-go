@@ -1,0 +1,4 @@
+#list the stuff
+list
+#load scenario
+scenario thegathering

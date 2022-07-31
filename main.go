@@ -22,22 +22,16 @@ func main() {
 
 	fmt.Printf("CardDB:\n %s\n", app.db.Status())
 
-	session := runtime.PlaySession{}
-
-	d1, err := runtime.LoadDeckFromFile("data/deck1.txt", app.db)
-	if err != nil {
-		panic(err)
-	}
-	d2, err := runtime.LoadDeckFromFile("data/deck2.txt", app.db)
-	if err != nil {
-		panic(err)
-	}
-
-	session.AddPlayer("falko", d1)
-	session.AddPlayer("zwerg", d2)
-
-	session.Init(nil)
-
+	/*
+		d1, err := runtime.LoadDeckFromFile("data/deck1.txt", app.db)
+		if err != nil {
+			panic(err)
+		}
+		d2, err := runtime.LoadDeckFromFile("data/deck2.txt", app.db)
+		if err != nil {
+			panic(err)
+		}
+	*/
 	crd := app.db.FindCardByName("Dr. Milan Christopher")
 	if crd == nil {
 		panic("Card not found")
