@@ -32,19 +32,14 @@ type GameEvent interface {
 	Payload() map[string]interface{}
 }
 
-type SimpleEvent struct {
-	name    string
-	payload map[string]interface{}
-}
-
-var globalCommands = map[GameState][]GameCommand{}
-
 type PlaySession struct {
 	CurrentState   GameState
 	Round          int
 	GlobalEntities []GameEntity
 	Scenario       *Scenario
 }
+
+var globalCommands = map[GameState][]GameCommand{}
 
 func NewGame() *PlaySession {
 	return &PlaySession{
@@ -95,15 +90,8 @@ func (ps *PlaySession) EmitEvent(event GameEvent) {
 
 }
 
-func NewGameEvent(name string, payload map[string]interface{}) GameEvent {
-	return &SimpleEvent{
-		name,
-		payload,
-	}
-}
-
 func NewHelpCommand(commands []GameCommand) GameCommand {
-	return &SimpleCommand{
+	return NewCommand(
 		"help",
 		"you are looking at it now",
 		func(ps *PlaySession, args []string) {
@@ -111,8 +99,7 @@ func NewHelpCommand(commands []GameCommand) GameCommand {
 			for _, cmd := range commands {
 				fmt.Printf("%s: %s\n", cmd.Command(), cmd.Help())
 			}
-		},
-	}
+		})
 }
 
 type SimpleCommand struct {
@@ -139,6 +126,18 @@ func (cmd *SimpleCommand) Help() string {
 
 func (cmd *SimpleCommand) Call(ps *PlaySession, args []string) {
 	cmd.fnc(ps, args)
+}
+
+type SimpleEvent struct {
+	name    string
+	payload map[string]interface{}
+}
+
+func NewGameEvent(name string, payload map[string]interface{}) GameEvent {
+	return &SimpleEvent{
+		name,
+		payload,
+	}
 }
 
 func (se *SimpleEvent) Name() string {

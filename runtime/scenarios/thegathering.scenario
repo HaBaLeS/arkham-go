@@ -1,12 +1,6 @@
 package game
 import "runtime"
 
-func HandleActivateEvent(state *runtime.PlaySession, event runtime.GameEvent) {
-println("Activating Scenario: \"The Gathering\"");
+func HandleActivateEvent(ps *runtime.PlaySession, event runtime.GameEvent) {
+  println("Activating Scenario: \"The Gathering\"");
 }
-
-
-func HandleTestEvent(state *runtime.PlaySession, event runtime.GameEvent) {
-println("Test Event");
-}
-
