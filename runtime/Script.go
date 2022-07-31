@@ -38,7 +38,7 @@ func NewScript(script string) (*Script, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = inter.Eval(script)
+	err = safeEval(inter, script)
 	if err != nil {
 		return nil, err
 	}
@@ -51,6 +51,7 @@ func NewScript(script string) (*Script, error) {
 			if submatch := methodHandlerRegex.FindStringSubmatch(name); submatch != nil {
 				eventMethods[submatch[1]] = meth
 			}
+			break
 		default:
 			// Nil
 		}
@@ -73,12 +74,12 @@ func (script *Script) CallEventIfExists(session *PlaySession, event GameEvent) (
 	return
 }
 
-func safeEval(inter *interp.Interpreter, script []byte) (err error) {
+func safeEval(inter *interp.Interpreter, script string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New(fmt.Sprint("Script parse Error", r))
 		}
 	}()
-	_, err = inter.Eval(string(script))
+	_, err = inter.Eval(script)
 	return
 }

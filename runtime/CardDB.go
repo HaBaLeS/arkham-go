@@ -199,7 +199,7 @@ func processImageAsset(v card.ArkhamCard, backimage bool) {
 
 	cardFile := fmt.Sprintf("leech-img/%s.png", v.CardCode())
 	if backimage {
-		cardFile = fmt.Sprintf("leech-img/%sb.png", v.CardCode)
+		cardFile = fmt.Sprintf("leech-img/%sb.png", v.CardCode())
 	}
 	fi, err := os.Stat(cardFile)
 	if err != nil || fi.Size() == 0 {

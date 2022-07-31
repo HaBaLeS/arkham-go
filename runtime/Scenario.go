@@ -1,7 +1,7 @@
 package runtime
 
 import (
-	scenarios "arkham-go/runtime/scenarios"
+	"arkham-go/runtime/scenarios"
 	"strings"
 )
 
