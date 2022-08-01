@@ -1,11 +1,13 @@
 package runtime
 
 import (
+	"arkham-go/card"
 	"arkham-go/runtime/scenarios"
 	"strings"
 )
 
 type Scenario struct {
+	card   *card.Scenario
 	script *Script
 }
 
@@ -28,7 +30,7 @@ func ScenarioList() []string {
 	return result
 }
 
-func LoadScenario(name string) (*Scenario, error) {
+func LoadScenario(ps *PlaySession, name string) (*Scenario, error) {
 	data, err := scenarios.Scenarios.ReadFile(name + ".scenario")
 	if err != nil {
 		return nil, err
@@ -37,7 +39,18 @@ func LoadScenario(name string) (*Scenario, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	idValue, err := script.ReadConstant("Card")
+	if err != nil {
+		return nil, err
+	}
+	var crd card.ArkhamCard = nil
+	switch id := idValue.Interface().(type) {
+	case string:
+		crd = ps.CardDB.cards[id]
+	}
 	return &Scenario{
+		crd.(*card.Scenario),
 		script,
 	}, nil
 }

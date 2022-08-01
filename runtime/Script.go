@@ -38,7 +38,7 @@ func NewScript(script string) (*Script, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = safeEval(inter, script)
+	_, err = safeEval(inter, script)
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +62,11 @@ func NewScript(script string) (*Script, error) {
 	}, nil
 }
 
+func (script *Script) ReadConstant(nane string) (reflect.Value, error) {
+	return safeEval(script.interpreter, "game."+nane)
+
+}
+
 func (script *Script) CallEventIfExists(session *PlaySession, event GameEvent) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -74,12 +79,12 @@ func (script *Script) CallEventIfExists(session *PlaySession, event GameEvent) (
 	return
 }
 
-func safeEval(inter *interp.Interpreter, script string) (err error) {
+func safeEval(inter *interp.Interpreter, script string) (result reflect.Value, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New(fmt.Sprint("Script parse Error", r))
 		}
 	}()
-	_, err = inter.Eval(script)
+	result, err = inter.Eval(script)
 	return
 }

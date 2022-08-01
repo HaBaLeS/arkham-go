@@ -1,26 +1,16 @@
 package main
 
 import (
-	"arkham-go/runtime"
 	"fmt"
 )
-
-type App struct {
-	db *runtime.CardDB
-}
 
 func main() {
 	fmt.Printf("go to hell\n")
 
-	app := App{}
-	app.db = runtime.NewCardDB()
+	app := NewApp()
+	app.InitApp()
 
-	err := app.db.Init("all_pretty.json")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("CardDB:\n %s\n", app.db.Status())
+	fmt.Printf("CardDB:\n %s\n", app.Runtime.CardDb.Status())
 
 	/*
 		d1, err := runtime.LoadDeckFromFile("data/deck1.txt", app.db)
@@ -32,13 +22,14 @@ func main() {
 			panic(err)
 		}
 	*/
-	crd := app.db.FindCardByName("Dr. Milan Christopher")
+	crd := app.Runtime.CardDb.FindCardByName("Dr. Milan Christopher")
 	if crd == nil {
 		panic("Card not found")
 	}
 	fmt.Printf("Found Card: %s\n", crd.CardCode())
 
 	println("Running the Game")
-	game := runtime.NewGame()
-	game.Run()
+	//app.Runtime.PlaySession.Run()
+	app.Web.Gin.Run("[::1]:8080")
+	//	web.NewServer(game)
 }

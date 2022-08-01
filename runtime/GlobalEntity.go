@@ -34,7 +34,7 @@ func listScenarios(ps *PlaySession, args []string) {
 }
 
 func loadScenario(ps *PlaySession, args []string) {
-	scenario, err := LoadScenario(args[0])
+	scenario, err := LoadScenario(ps, args[0])
 	if err != nil {
 		fmt.Printf("Unable to load scenario: %s\n", err.Error())
 	}

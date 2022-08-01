@@ -33,6 +33,7 @@ type GameEvent interface {
 }
 
 type PlaySession struct {
+	CardDB         *CardDB
 	CurrentState   GameState
 	Round          int
 	GlobalEntities []GameEntity
@@ -41,8 +42,9 @@ type PlaySession struct {
 
 var globalCommands = map[GameState][]GameCommand{}
 
-func NewGame() *PlaySession {
+func NewGame(db *CardDB) *PlaySession {
 	return &PlaySession{
+		CardDB:         db,
 		CurrentState:   StateVoid,
 		Round:          0,
 		GlobalEntities: []GameEntity{&GlobalGameController{}},
