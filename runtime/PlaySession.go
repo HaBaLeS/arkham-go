@@ -37,7 +37,8 @@ type PlaySession struct {
 	CurrentState   GameState
 	Round          int
 	GlobalEntities []GameEntity
-	Scenario       *Scenario
+	Scenario       *Card
+	Players        *Player
 }
 
 var globalCommands = map[GameState][]GameCommand{}
@@ -89,7 +90,6 @@ func (ps *PlaySession) EmitEvent(event GameEvent) {
 	for _, entity := range ps.GlobalEntities {
 		entity.HandleEvent(ps, event)
 	}
-
 }
 
 func NewHelpCommand(commands []GameCommand) GameCommand {

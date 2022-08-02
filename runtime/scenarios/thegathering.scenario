@@ -1,8 +1,0 @@
-package game
-import "runtime"
-
-const Card string = "01104"
-
-func HandleActivateEvent(ps *runtime.PlaySession, event runtime.GameEvent) {
-  println("Activating Scenario: \"The Gathering\"");
-}

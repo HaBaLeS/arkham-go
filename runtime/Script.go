@@ -15,7 +15,7 @@ type Script struct {
 }
 
 var Symbols = map[string]map[string]reflect.Value{
-	"runtime/runtime": {
+	"arkham-go/runtime/runtime": {
 		"GameState":   reflect.ValueOf((*GameState)(nil)),
 		"GameCommand": reflect.ValueOf((*GameCommand)(nil)),
 		"GameEntity":  reflect.ValueOf((*GameEntity)(nil)),
@@ -43,8 +43,8 @@ func NewScript(script string) (*Script, error) {
 		return nil, err
 	}
 	eventMethods := make(map[string]EventHandlerMethod, 0)
-	symbols := inter.Symbols("game")
-	for name, val := range symbols["game"] {
+	symbols := inter.Symbols("script")
+	for name, val := range symbols["script"] {
 		iface := val.Interface()
 		switch meth := iface.(type) {
 		case EventHandlerMethod:

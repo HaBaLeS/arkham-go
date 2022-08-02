@@ -1,0 +1,9 @@
+package script
+
+import "arkham-go/runtime"
+
+// Scenario: The Gathering
+
+func HandleActivateEvent(ps *runtime.PlaySession, event runtime.GameEvent) {
+	println("Activating Scenario: \"The Gathering\"")
+}

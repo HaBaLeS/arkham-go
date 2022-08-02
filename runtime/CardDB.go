@@ -2,7 +2,9 @@ package runtime
 
 import (
 	"arkham-go/card"
+	"arkham-go/runtime/script"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -231,4 +233,31 @@ func processImageAsset(v card.ArkhamCard, backimage bool) {
 		}
 
 	}
+}
+
+func (db *CardDB) ScenarioList() []string {
+
+	result := make([]string, 0)
+	for _, scene := range db.scenario {
+		_, err := script.Cards.ReadFile(scene.CardCode() + ".yaegi")
+		if err == nil {
+			result = append(result, scene.CardCode()+": "+scene.Name)
+		}
+	}
+	return result
+}
+
+func (db *CardDB) LoadCard(code string) (*Card, error) {
+	if arkhamCard, ok := db.cards[code]; ok {
+		data, err := script.Cards.ReadFile(arkhamCard.CardCode() + ".yaegi")
+		if err != nil {
+			return nil, err
+		}
+		scrpt, err := NewScript(string(data))
+		return &Card{
+			arkhamCard,
+			scrpt,
+		}, nil
+	}
+	return nil, errors.New("Scenario " + code + " not found !")
 }

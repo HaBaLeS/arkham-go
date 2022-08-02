@@ -27,16 +27,17 @@ func (controller *GlobalGameController) FetchCommands(ps *PlaySession) []GameCom
 
 func listScenarios(ps *PlaySession, args []string) {
 	fmt.Printf("Available Scenarios:\n")
-	for _, name := range ScenarioList() {
+	for _, name := range ps.CardDB.ScenarioList() {
 		fmt.Printf(" - %s\n", name)
 	}
 	println()
 }
 
 func loadScenario(ps *PlaySession, args []string) {
-	scenario, err := LoadScenario(ps, args[0])
+	scenario, err := ps.CardDB.LoadCard(args[0])
 	if err != nil {
 		fmt.Printf("Unable to load scenario: %s\n", err.Error())
+		return
 	}
 	ps.Scenario = scenario
 	scenario.Activate(ps)

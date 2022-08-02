@@ -29,7 +29,6 @@ func main() {
 	fmt.Printf("Found Card: %s\n", crd.CardCode())
 
 	println("Running the Game")
-	//app.Runtime.PlaySession.Run()
-	app.Web.Gin.Run("[::1]:8080")
-	//	web.NewServer(game)
+	app.Runtime.PlaySession.Run()
+	//app.Web.Gin.Run("[::1]:8080")
 }
