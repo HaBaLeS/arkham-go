@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-var DO_LEECH = false
+var DO_LEECH = true
 
 type CardDB struct {
 	cards map[string]card.ArkhamCard
