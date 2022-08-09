@@ -3,6 +3,8 @@ package main
 import (
 	"arkham-go/runtime"
 	"fmt"
+	arkham_game "github.com/HaBaLeS/arkham-go/modules/arkham-game"
+	gpbge "github.com/HaBaLeS/arkham-go/modules/gpbge"
 )
 
 type App struct {
@@ -43,5 +45,10 @@ func main() {
 		panic("Card not found")
 	}
 	fmt.Printf("Found Card: %s", crd.CardCode())
+
+	arkham := arkham_game.BuildArkhamPhases()
+	ge := gpbge.NewPhaseEngine(arkham)
+
+	ge.Start()
 
 }
