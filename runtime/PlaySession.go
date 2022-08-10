@@ -5,7 +5,7 @@ type PlaySession struct {
 
 func (ps *PlaySession) AddPlayer(name string, deck *Deck) {}
 
-func (ps *PlaySession) Init(scenario *Scenario) {
+func (ps *PlaySession) Init(scenario *ScenarioData) {
 	//Create a chaos Bag
 	//Create AgendaDeck
 	//Create ActDeck

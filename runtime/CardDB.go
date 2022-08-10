@@ -1,9 +1,9 @@
 package runtime
 
 import (
-	"arkham-go/card"
 	"encoding/json"
 	"fmt"
+	"github.com/HaBaLeS/arkham-go/card"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-var DO_LEECH = true
+var DO_LEECH = false
 
 type CardDB struct {
 	cards map[string]card.ArkhamCard
@@ -75,6 +75,12 @@ func (d *CardDB) Init(file string) error {
 		}
 		d.cards[crd.CardCode()] = crd
 		leechAssets(crd)
+		if crd.Base().Image != "" {
+			crd.Base().Image = strings.Replace(crd.Base().Image, "/bundles/cards/", "", 1)
+		}
+		if crd.Base().BackImage != "" {
+			crd.Base().BackImage = strings.Replace(crd.Base().BackImage, "/bundles/cards/", "", 1)
+		}
 	}
 	return nil
 }
@@ -178,6 +184,10 @@ Story 			 %d
 -------------------
 Total 			 %d
 `, len(d.investigators), len(d.treachery), len(d.asset), len(d.event), len(d.enemy), len(d.skill), len(d.scenario), len(d.agenda), len(d.act), len(d.location), len(d.story), len(d.cards))
+}
+
+func (d *CardDB) GetCard(k string) card.ArkhamCard {
+	return d.cards[k]
 }
 
 func leechAssets(crd card.ArkhamCard) {

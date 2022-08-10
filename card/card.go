@@ -24,6 +24,9 @@ type Common struct {
 	Image     string `json:"imagesrc"`
 	BackImage string `json:"backimagesrc"`
 	Name      string `json:"name"`
+
+	Flipped bool
+	Tapped  bool
 }
 
 func (c *Common) Base() *Common {
@@ -73,9 +76,6 @@ type Agenda struct {
 type Act struct {
 	Common
 }
-type Location struct {
-	Common
-}
 
 type Story struct {
 	Common
@@ -85,6 +85,22 @@ func AcAsInvestigator(ac ArkhamCard) *Investigator {
 	c, ok := ac.(*Investigator)
 	if !ok {
 		panic(fmt.Errorf("could not convert %s to Investigator", ac.CardCode()))
+	}
+	return c
+}
+
+func AcAsAct(ac ArkhamCard) *Act {
+	c, ok := ac.(*Act)
+	if !ok {
+		panic(fmt.Errorf("could not convert %s to Act", ac.CardCode()))
+	}
+	return c
+}
+
+func AcAsAgenda(ac ArkhamCard) *Agenda {
+	c, ok := ac.(*Agenda)
+	if !ok {
+		panic(fmt.Errorf("could not convert %s to Agenda", ac.CardCode()))
 	}
 	return c
 }

@@ -1,12 +1,33 @@
 package arkham_game
 
 import (
+	"github.com/HaBaLeS/arkham-go/card"
 	"github.com/HaBaLeS/arkham-go/modules/gpbge"
+	"github.com/HaBaLeS/arkham-go/runtime"
 	"log"
-	"time"
+	"sync"
 )
 
 type ExecFunc func()
+
+type ArkhamStart struct {
+	wg            *sync.WaitGroup
+	wgResolveFunc ExecFunc
+	startLocation *card.Location
+}
+
+func (as *ArkhamStart) StartGame() {
+	log.Printf("Game Start. Waiting for Player to start the Game")
+	as.wg.Add(1)
+	as.wg.Wait()
+}
+
+func (as *ArkhamStart) Callback() {
+	//enable player
+	//flip card startlocation
+	as.startLocation.ActivateLocation()
+	as.wg.Done()
+}
 
 type ArkhamPhase struct {
 	name     string
@@ -30,13 +51,20 @@ func (ap *ArkhamPhase) SetNext(next gpbge.Phase) {
 	ap.next = next
 }
 
-func BuildArkhamPhases() gpbge.Phase {
+func BuildArkhamGame(scnData *runtime.ScenarioData) *gpbge.PhaseEngine {
+
+	//Start of Game
+	start := &ArkhamStart{
+		wg:            &sync.WaitGroup{},
+		startLocation: scnData.StartLocation,
+	}
+	start.wgResolveFunc = start.Callback
+
+	//Phases
+
 	mp := CreateMythosPhase()
-
 	ip := CreateInvestigationPhase()
-
 	ep := CreateEnemyPhase()
-
 	up := CreateUpkeepPhase()
 
 	mp.SetNext(ip)
@@ -44,10 +72,8 @@ func BuildArkhamPhases() gpbge.Phase {
 	ep.SetNext(up)
 	up.SetNext(mp)
 
-	return ip //Game starts with Investigation, first mythos is skipped
-}
+	//Put together
+	engine := gpbge.NewPhaseEngine(ip, start)
 
-func DefaultExecFunc() {
-	log.Printf("Executing Phase internally")
-	time.Sleep(500 * time.Millisecond)
+	return engine //Game starts with Investigation, first mythos is skipped
 }

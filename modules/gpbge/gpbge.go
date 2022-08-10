@@ -5,8 +5,14 @@ import (
 )
 
 type PhaseEngine struct {
+	GameStart  Start
 	StartPhase Phase
 	Running    bool
+}
+
+type Start interface {
+	StartGame()
+	Callback()
 }
 
 type Phase interface {
@@ -15,14 +21,16 @@ type Phase interface {
 	Execute()
 }
 
-func NewPhaseEngine(start Phase) *PhaseEngine {
+func NewPhaseEngine(phase Phase, start Start) *PhaseEngine {
 	return &PhaseEngine{
 		Running:    true,
-		StartPhase: start,
+		StartPhase: phase,
+		GameStart:  start,
 	}
 }
 
 func (pe *PhaseEngine) Start() {
+	pe.GameStart.StartGame()
 	current := pe.StartPhase
 	for pe.Running {
 		log.Printf("Start Execution for Phase: %s", current.Name())

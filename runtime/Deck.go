@@ -1,9 +1,9 @@
 package runtime
 
 import (
-	"arkham-go/card"
 	"bufio"
 	"fmt"
+	"github.com/HaBaLeS/arkham-go/card"
 	"os"
 	"strconv"
 	"strings"

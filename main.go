@@ -1,10 +1,10 @@
 package main
 
 import (
-	"arkham-go/runtime"
 	"fmt"
 	arkham_game "github.com/HaBaLeS/arkham-go/modules/arkham-game"
-	gpbge "github.com/HaBaLeS/arkham-go/modules/gpbge"
+	"github.com/HaBaLeS/arkham-go/runtime"
+	"log"
 )
 
 type App struct {
@@ -41,14 +41,15 @@ func main() {
 	session.Init(nil)
 
 	crd := app.db.FindCardByName("Dr. Milan Christopher")
+
 	if crd == nil {
 		panic("Card not found")
 	}
-	fmt.Printf("Found Card: %s", crd.CardCode())
+	log.Printf("Found Card: %s", crd.CardCode())
 
-	arkham := arkham_game.BuildArkhamPhases()
-	ge := gpbge.NewPhaseEngine(arkham)
+	scn := runtime.GetFirstScenarioData(app.db)
 
-	ge.Start()
+	arkham := arkham_game.BuildArkhamGame(scn)
+	arkham.Start()
 
 }
