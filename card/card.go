@@ -9,6 +9,7 @@ type CType struct {
 const (
 	InvestigatorType string = "investigator"
 	TreacheryType    string = "treachery"
+	LocationType     string = "location"
 )
 
 type ArkhamCard interface {

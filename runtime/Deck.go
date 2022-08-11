@@ -9,10 +9,14 @@ import (
 	"strings"
 )
 
-type Deck struct {
+type PlayerDeck struct {
 	Title        string
 	Investigator *card.Investigator
 	Cards        []card.ArkhamCard
+	Hand         string
+	GraveYard    string
+	Reserve      string
+	HandLimit    int
 }
 
 //shuffle
@@ -25,9 +29,9 @@ type Deck struct {
 
 //build(description)
 
-func LoadDeckFromFile(file string, db *CardDB) (*Deck, error) {
+func LoadPlayerDeckFromFile(file string, db *CardDB) (*PlayerDeck, error) {
 
-	retVal := new(Deck)
+	retVal := new(PlayerDeck)
 
 	f, err := os.Open(file)
 	if err != nil {

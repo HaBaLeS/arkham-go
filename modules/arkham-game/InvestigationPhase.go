@@ -24,5 +24,6 @@ func DoInvestigate() {
 	log.Printf("\t\t Escape")
 	log.Printf("\t\t Fight")
 	log.Printf("\t (if engaged with enemy and NOT Escape, Fight (or special Card  'verhandeln', 'aufgeben') then there is a Gelegenheitsangriff)")
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(500 * time.Minute)
+
 }

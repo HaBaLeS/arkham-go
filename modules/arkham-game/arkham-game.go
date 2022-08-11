@@ -2,6 +2,7 @@ package arkham_game
 
 import (
 	"github.com/HaBaLeS/arkham-go/card"
+	"github.com/HaBaLeS/arkham-go/command"
 	"github.com/HaBaLeS/arkham-go/modules/gpbge"
 	"github.com/HaBaLeS/arkham-go/runtime"
 	"log"
@@ -14,6 +15,7 @@ type ArkhamStart struct {
 	wg            *sync.WaitGroup
 	wgResolveFunc ExecFunc
 	startLocation *card.Location
+	guiChan       chan command.GuiCommand
 }
 
 func (as *ArkhamStart) StartGame() {
@@ -26,6 +28,17 @@ func (as *ArkhamStart) Callback() {
 	//enable player
 	//flip card startlocation
 	as.startLocation.ActivateLocation()
+	as.guiChan <- &command.PlayCardCommand{
+		Ctype:      "play_card",
+		CardToPlay: "investigator1",
+		NextTo:     as.startLocation.CCode,
+	}
+	as.guiChan <- &command.PlayCardCommand{
+		Ctype:      "play_card",
+		CardToPlay: "investigator2",
+		NextTo:     as.startLocation.CCode,
+	}
+	log.Printf("Command Sent!")
 	as.wg.Done()
 }
 
@@ -51,12 +64,13 @@ func (ap *ArkhamPhase) SetNext(next gpbge.Phase) {
 	ap.next = next
 }
 
-func BuildArkhamGame(scnData *runtime.ScenarioData) *gpbge.PhaseEngine {
+func BuildArkhamGame(scnData *runtime.ScenarioData, guiChan chan command.GuiCommand) *gpbge.PhaseEngine {
 
 	//Start of Game
 	start := &ArkhamStart{
 		wg:            &sync.WaitGroup{},
 		startLocation: scnData.StartLocation,
+		guiChan:       guiChan,
 	}
 	start.wgResolveFunc = start.Callback
 

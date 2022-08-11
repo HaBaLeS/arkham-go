@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/HaBaLeS/arkham-go/card"
 	"io"
-	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -53,7 +53,7 @@ func (d *CardDB) Init(file string) error {
 	}
 	defer r.Close()
 
-	b, err := ioutil.ReadAll(r)
+	b, err := io.ReadAll(r)
 	if err != nil {
 		return err
 	}
@@ -162,6 +162,11 @@ func (d *CardDB) FindCardByName(name string) card.ArkhamCard {
 	for _, v := range d.cards {
 		if v.Base().Name == name {
 			//fixme find duplicates check for cards without name
+			// also it can happen a card has no image :-/ .. we will skip these cards for now
+			if v.Base().Image == "" {
+				log.Printf("WARNING: %s has no image. Skipping this card!", v.Base().CCode)
+				continue
+			}
 			return v
 		}
 	}
