@@ -1,6 +1,8 @@
-package arkham_game
+package engine
 
-import "log"
+import (
+	"log"
+)
 
 func CreateEnemyPhase() *ArkhamPhase {
 	return &ArkhamPhase{

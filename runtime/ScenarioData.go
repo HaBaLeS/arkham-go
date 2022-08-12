@@ -10,6 +10,8 @@ type ScenarioData struct {
 	locations   []*card.Location
 	agendaCards []*card.Agenda
 	actCards    []*card.Act
+
+	Player []*PlayerDeck
 }
 
 func GetFirstScenarioData(db *CardDB) *ScenarioData {
@@ -30,10 +32,15 @@ func GetFirstScenarioData(db *CardDB) *ScenarioData {
 	scn.locations = make([]*card.Location, 0)
 	scn.agendaCards = make([]*card.Agenda, 0)
 	scn.actCards = make([]*card.Act, 0)
+	scn.Player = make([]*PlayerDeck, 0)
 
 	scn.locations = append(scn.locations, scn.StartLocation)
 
 	return scn
+}
+
+func (s *ScenarioData) AddPlayer(p *PlayerDeck) {
+	s.Player = append(s.Player, p)
 }
 
 func (s *ScenarioData) GetActiveLocations() []*card.Location {

@@ -1,4 +1,4 @@
-package arkham_game
+package engine
 
 import (
 	"log"

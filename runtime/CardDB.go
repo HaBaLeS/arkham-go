@@ -12,6 +12,7 @@ import (
 )
 
 var DO_LEECH = false
+var cdb_initialized = false
 
 type CardDB struct {
 	cards map[string]card.ArkhamCard
@@ -47,6 +48,9 @@ func NewCardDB() *CardDB {
 }
 
 func (d *CardDB) Init(file string) error {
+	if cdb_initialized {
+		log.Panicf("Do not initialize DB twice!!")
+	}
 	r, err := os.Open(file)
 	if err != nil {
 		return err
@@ -82,6 +86,7 @@ func (d *CardDB) Init(file string) error {
 			crd.Base().BackImage = strings.Replace(crd.Base().BackImage, "/bundles/cards/", "", 1)
 		}
 	}
+	cdb_initialized = true
 	return nil
 }
 
