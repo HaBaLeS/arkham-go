@@ -3,6 +3,7 @@ package command
 import "image"
 
 type GuiCommand interface {
+	//empty interface .. sent anything
 }
 
 type InfoCommand struct {
@@ -23,4 +24,17 @@ type PlayCardCommand struct {
 
 type EnableCommand struct {
 	What string
+}
+
+type DisableCommand struct {
+	What string
+}
+
+type EngineCommand interface {
+	//empty interface .. sent anything
+}
+
+type DoInvestigate struct {
+	Investigator string
+	Location     string
 }

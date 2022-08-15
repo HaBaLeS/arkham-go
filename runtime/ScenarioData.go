@@ -11,7 +11,8 @@ type ScenarioData struct {
 	agendaCards []*card.Agenda
 	actCards    []*card.Act
 
-	Player []*PlayerDeck
+	Player        []*PlayerDeck
+	CurrentPlayer *PlayerDeck
 }
 
 func GetFirstScenarioData(db *CardDB) *ScenarioData {

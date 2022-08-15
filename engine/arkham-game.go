@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"github.com/HaBaLeS/arkham-go/command"
 	"github.com/HaBaLeS/arkham-go/gamelogic"
 	"log"
 	"sync"
@@ -25,9 +26,10 @@ func (as *ArkhamStart) Callback() {
 }
 
 type ArkhamPhase struct {
-	name     string
-	next     Phase
-	execfunc ExecFunc
+	name       string
+	next       Phase
+	execfunc   ExecFunc
+	engineChan chan command.EngineCommand
 }
 
 func (ap *ArkhamPhase) Name() string {

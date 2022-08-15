@@ -30,7 +30,14 @@ func (l *Location) ActivateLocation(inv ...*Investigator) {
 			Y:          float64(400),
 			SubImage:   image.Rect(3, 7, 215, 175),
 		})
+
+		//Note down where the play is
+		v.CurrentLocation = l.CCode
 	}
+
+	command.SendGuiCommand(&command.DisableCommand{
+		What: "testButton",
+	})
 
 	command.SendGuiCommand(&command.EnableCommand{
 		What: "investigator_gui",

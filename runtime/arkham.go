@@ -36,6 +36,7 @@ func Init(guiChan chan command.GuiCommand) {
 	}
 	scenarioG.AddPlayer(d1)
 	scenarioG.AddPlayer(d2)
+	scenarioG.CurrentPlayer = d1
 
 	globals_initialized = true
 
